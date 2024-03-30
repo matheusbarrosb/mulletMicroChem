@@ -27,11 +27,20 @@ model {
 }
 generated quantities {
   vector[N] y_hat;  // POSTERIOR PREDICTIVE
+  vector[K] lp;
+  vector[N] loglik;
+  real<lower=0,upper=1>prob;
   for (i in 1:N) {
     for (k in 1:K) {
-      y_hat[i] = exp(log_mix(theta[k],
-                              normal_lpdf(y[i]|mu[1], sigma[1]),
-                              normal_lpdf(y[i]|mu[2], sigma[2])));
+      lp[1] = log(theta[1]) + lognormal_lpdf(y[i] | mu[1], sigma[1]);
+      lp[2] = log(theta[2]) + lognormal_lpdf(y[i] | mu[2], sigma[2]);
+      loglik[i] = log_sum_exp(lp);
+      prob = bernoulli_rng(theta[k]);
+      if (prob) {
+        y_hat[i] = lognormal_rng(mu[1], sigma[1]);
+      } else {
+        y_hat[i] = lognormal_rng(mu[2], sigma[2]);
+      }
     }
   }
 }
