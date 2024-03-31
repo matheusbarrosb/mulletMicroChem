@@ -5,7 +5,7 @@ data {
 }
 parameters {
   positive_ordered[K] mu;       // MEAN Sr/Ca FOR EACH K-TH HABITAT
-  positive_ordered[K] sigma;   // SD of Sr/Ca FOR EACH K-TH HABITAT
+  real<lower=0> sigma[K];   // SD of Sr/Ca FOR EACH K-TH HABITAT
   simplex[K] theta;            // MIXTURE PROPORTIONS
   vector<lower=0>[K] alpha;    // DIRICHLET RATE PARAMETER
 }
@@ -35,7 +35,7 @@ generated quantities {
       lp[1] = log(theta[1]) + lognormal_lpdf(y[i] | mu[1], sigma[1]);
       lp[2] = log(theta[2]) + lognormal_lpdf(y[i] | mu[2], sigma[2]);
       loglik[i] = log_sum_exp(lp);
-      prob = bernoulli_rng(theta[k]);
+      prob = bernoulli_rng(theta[1]);
       if (prob) {
         y_hat[i] = lognormal_rng(mu[1], sigma[1]);
       } else {
