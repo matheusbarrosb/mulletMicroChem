@@ -11,8 +11,8 @@ parameters {
 }
 model {
   for (k in 1:K) {
-    mu[1] ~ normal(0.9, 0.5);  // DIFFUSE PRIORS BUT CENTERED AT MEAN
-    mu[2] ~ normal(1.5, 0.5);
+    mu[1] ~ normal(0.03, 0.01);  // DIFFUSE PRIORS BUT CENTERED AT MEAN
+    mu[2] ~ normal(0.08, 0.01);
     sigma[1] ~ cauchy(0,1);    // HALF-CAUCHY PRIORS FOR SDs
     sigma[2] ~ cauchy(0,1); 
   }
