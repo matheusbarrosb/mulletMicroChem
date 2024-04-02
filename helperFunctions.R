@@ -50,7 +50,9 @@ runModels <- function (masterDataList, N = 51,
   
   outputDF <- do.call(rbind, Z) # merge all dataframes
   
-  return(outputDF)
+  output <- list(outputDF, Y, X) # merged data frame, list of individual dataframes, and list of stan fits, respectively
+  
+  return(output)
 
 }
 
@@ -89,8 +91,8 @@ ggplot(data = mergedDF) +
   geom_density(aes(x = value, 
                    color = Source,
                    linetype = Source),
-               linewidth = 1) +
-  facet_wrap(~Fish_number)+ xlim(0,0.08) +
+               linewidth = 0.6) +
+  facet_wrap(~Fish_number)+ xlim(0,0.09) +
   theme_classic() + ylab("Density") +
   xlab("Sr/Ca")
 
