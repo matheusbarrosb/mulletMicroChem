@@ -56,7 +56,7 @@ runModels <- function (masterDataList, N = 51,
 
 #------------------------------------------------------------------------------#
 
-graphPPchecks <- function(obDataList, fitDataList, Nfish = 6) {
+graphPPchecks <- function(obDataList, fitDataList, Nfish = 51) {
 # performs graphical posterior predictive checks
 # object 'fitDataList' has to be a list of dataframes provided by ggs() function from ggmcmc package
   
@@ -98,7 +98,7 @@ ggplot(data = mergedDF) +
 
 #------------------------------------------------------------------------------#
 
-plotThetas <- function(fitList, Nfish = 6) {
+plotThetas <- function(fitList, Nfish = 51) {
 # plot mixture component proportions
   mcmcList = list()
   for (i in 1:Nfish) {
