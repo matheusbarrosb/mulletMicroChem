@@ -16,6 +16,46 @@ makeStanData <- function (inputData) {
 
 #------------------------------------------------------------------------------#
 
+runModels <- function (masterDataList, N = 51, 
+                       inits, nIter,
+                       nChains, nWarmup) {
+  
+  # runs many models consecutively and stores outputs in merged dataframe
+  
+  X <- list()
+  for (i in 1:N) {
+    # store individual fits in a N-dimensional list
+    X[[i]]<-stan(file = "mixture.stan", 
+                 data = stanMasterDataList[[i]],
+                 warmup = nWarmup,
+                 iter = nIter,
+                 chains = nChains,
+                 init = inits)
+  }
+  
+  Y <- list()
+  for (i in 1:N) {
+  # converts individual fits in previous list to ggs dataframes  
+    Y[[i]] <- ggs(X[[i]])
+    
+  }
+  
+  Z <- list()
+  for (i in 1:N) {
+    # include FishID identifier in dataframes
+    index <- print(paste("", i, sep = ""))
+    Z[[i]] <- Y[[i]] %>% mutate(fishID = paste(index))
+    
+  }
+  
+  outputDF <- do.call(rbind, Z) # merge all dataframes
+  
+  return(outputDF)
+
+}
+
+#------------------------------------------------------------------------------#
+
 graphPPchecks <- function(obDataList, fitDataList, Nfish = 6) {
 # performs graphical posterior predictive checks
 # object 'fitDataList' has to be a list of dataframes provided by ggs() function from ggmcmc package
