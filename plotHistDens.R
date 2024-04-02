@@ -12,7 +12,7 @@ setwd("/Users/matheusb/Documents/mulletMicroChem/SrCaHistograms")
 MC_SrCa <- read_csv("M_curvidens_SrCa.csv")
 OR <- as.numeric(MC_SrCa$`Otolith radius`) # grab otolith radius variable
 otoliths <- as.data.frame(MC_SrCa[2:55]) # select columns containing the chemical ratios
-col_names <- c(sprintf("%02d", seq(1,ncol(otoliths)))) # name columns as fish_01, ..., fish_0N
+col_names <- c(sprintf("%02d", seq(1,ncol(otoliths)))) # name columns as 01, ..., 0N
 colnames(otoliths) <- col_names
 Sr_data <- cbind(OR, otoliths)
 Sr_data[-1][Sr_data[-1]>=0.09] <- NA # exclude points that have ablated after the edge

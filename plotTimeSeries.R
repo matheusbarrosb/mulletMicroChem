@@ -2,8 +2,12 @@
 require(ggplot2)
 library(readr)
 
+# EXECUTE THOSE IN ORDER #######################################################
+# BUT CHANGE DIRECTORIES ACCORDINGLY
+setwd("/Users/matheusb/Documents/mulletMicroChem")
 MC_SrCa <- read_csv("M_curvidens_SrCa.csv")
 setwd("/Users/matheusb/Documents/mulletMicroChem/timeSeriesPlots")
+################################################################################
 
 OR <- as.numeric(MC_SrCa$`Otolith radius`) # grab otolith radius variable
 otoliths <- as.data.frame(MC_SrCa[2:55]) # select columns containing the chemical ratios
