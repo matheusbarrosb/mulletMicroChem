@@ -1,9 +1,15 @@
+list.of.packages <- c("rstan", "bayesplot", "dplyr", "tidyverse", "ggmcmc", "see")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
 require(rstan)
 require(bayesplot)
 require(dplyr)
 require(tidyverse)
 require(ggmcmc)
 require(see)
+
+source("helperFunctions.R")
 
 setwd("/Users/matheusb/Documents/mulletMicroChem")
 
@@ -22,7 +28,7 @@ Sr_data2 <- Sr_data %>%
 # formatting data for stan
 Sr_data2 <- na.exclude(Sr_data2)
 # grab fish No
-selected <- paste0("Fish_", 1:6)
+selected <- paste0("Fish_", 1:52)
 #selected <- paste0("Fish_", 1:length(unique(Sr_data2$Fish_number)))
 Sr_data2<-Sr_data2[Sr_data2$Fish_number %in% selected,]
 # prepare data for stan
@@ -36,37 +42,14 @@ inits <- function() {
 }
 
 stanc("mixture.stan") # check if model code compiles
-# RUNNING MODELS ####
-## FISH 01 ####
-fit01 <- rstan::stan(file = "mixture.stan", data = stanMasterDataList[[1]],
-                   warmup = 2000, iter = 10000, chains = 2, init = inits)
+# RUNNING ALL MODELS ####
+fits <- runModels(masterDataList = stanMasterDataList,
+          inits = inits, N = 2, nWarmup = 500,
+          nIter = 1000, nChains = 51)
 
-## FISH 02 ####
-fit02 <- rstan::stan(file = "mixture.stan", data = stanMasterDataList[[2]],
-                     warmup = 2000, iter = 10000, chains = 2, init = inits)
-
-## FISH 03 ####
-fit03 <- rstan::stan(file = "mixture.stan", data = stanMasterDataList[[3]],
-                     warmup = 2000, iter = 10000, chains = 2, init = inits)
-
-## FISH 04 ####
-fit04 <- rstan::stan(file = "mixture.stan", data = stanMasterDataList[[4]],
-                     warmup = 2000, iter = 10000, chains = 2, init = inits)
-
-
-# GRAPHICAL POSTERIOR PREDICTIVE CHECKS ####
-fit01mcmc <- ggs(fit01) %>% filter(grepl('y_hat', Parameter))
-fit02mcmc <- ggs(fit02) %>% filter(grepl('y_hat', Parameter))
-fit03mcmc <- ggs(fit03) %>% filter(grepl('y_hat', Parameter))
-fit04mcmc <- ggs(fit04) %>% filter(grepl('y_hat', Parameter))
-
-fitDataList = list(fit01mcmc, fit02mcmc, fit03mcmc,
-                   fit04mcmc)
-
+# GRAPHICAL PP CHECKS ####
 graphPPchecks(obData = stanMasterDataList,
-         fitDataList = fitDataList, Nfish = 4)
-
-
+              fitDataList = fits[[2]], Nfish = 51)
 
 
 
