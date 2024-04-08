@@ -164,6 +164,30 @@ getSalinity <- function(Sr) {
   
 }
 
+#------------------------------------------------------------------------------#
+
+simulateProfile <- function(mu1, mu2, sigma1, sigma2, theta, N,
+                            sigmaState, sigmaObs) {
+  # simulates a microchemical profile with a mixture of two gaussians 
+  # + distinct state and observation processes
+  # returns a dataframe with simulated observations and states
+  x1 = rnorm((theta*N), mu1, sigma1)
+  x2 = rnorm(((1-theta)*N), mu2, sigma2)
+  
+  x = c(x1, x2)
+  state = x + rnorm(N, 0, sigmaState)
+  
+  obs = state + rnorm(N, 0, sigmaObs)
+  
+  output = data.frame(state, obs)
+  output$state = ifelse(output$state <0, NA, output$state)
+  output$obs = ifelse(output$obs <0, NA, output$obs)
+  output = na.exclude(output)
+  
+  return(output)
+  
+}
+
 # cool ggplot theme ------------------------------------------------------------
 theme_custom <- function(){ 
   font <- "sans"   #assign font family up front
