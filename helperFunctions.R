@@ -167,10 +167,11 @@ getSalinity <- function(Sr) {
 #------------------------------------------------------------------------------#
 
 simulateProfile <- function(mu1, mu2, sigma1, sigma2, theta, N,
-                            sigmaState, sigmaObs) {
+                            sigmaState, sigmaObs, seed = 2024) {
   # simulates a microchemical profile with a mixture of two gaussians 
   # + distinct state and observation processes
   # returns a dataframe with simulated observations and states
+  set.seed(seed)
   x1 = rnorm((theta*N), mu1, sigma1)
   x2 = rnorm(((1-theta)*N), mu2, sigma2)
   
