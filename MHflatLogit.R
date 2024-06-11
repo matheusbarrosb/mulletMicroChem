@@ -2,6 +2,9 @@ MHflatLogit = function(nIter, nBurnIn, y, X, delta, plot = TRUE) {
   
   ## PERFORMS A METROPOLIS-HASTINGS ALGORITHM FOR A PROBIT MODEL
   
+  ## CODE ADAPTED FROM:
+  # Marin, JM, & Robert, CP (2014) Bayesian essentials with R. New York: Springer.
+  
   ## PARAMETERS
   
   # nIter -> number of iterations
